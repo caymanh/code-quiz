@@ -1,0 +1,1 @@
+//If countdown reaches zero or user has already answered all questions, display score
