@@ -1,111 +1,161 @@
-// var questions = [
-//     {
-//         title: "When a user views a page containing a JavaScript program, which machine actually executes the script?",
-//         choices: ["The User's machine running a Web browser", "The Web server", "A central machine deep within Netscape's corporate offices", "None of the above"],
-//         answer: "The User's machine running a Web browser"
-//     },
-//     {
-//         title: "What are variables used for in JavaScript Programs?",
-//         choices: ["Storing numbers, dates, or other values", "Varying randomly", "Causing high-school algebra flashbacks", "None of the above"],
-//         answer: "Storing numbers, dates, or other values"
-//     },
-//     {
-//         title: "Which of the following are capabilities of functions in JavaScript?",
-//         choices: ["Return a value", "Accept parameters and Return a value", "Accept parameters", "None of the above"],
-//         answer: "Accept parameters"
-//     },
-//     {
-//         title: "Which of the following is not a valid JavaScript variable name?",
-//         choices: ["2names", "_first_and_last_names", "FirstAndLast", "None of the above"],
-//         answer: "2names"
-//     },
-//     {
-//         title: "How does JavaScript store dates in a date object?",
-//         choices: ["The number of milliseconds since January 1st, 1970", "The number of milliseconds since January 1st, 1970", "The number of seconds since Netscape's public stock offering.", "None of the above"],
-//         answer: "The number of milliseconds since January 1st, 1970"
-//     },
-//     {
-//         title: "Inside which HTML element do we put the JavaScript?",
-//         choices: ["<js>", "<scripting>", "<script>", "<javascript>"],
-//         answer: "<script>"
-//     },
-//     {
-//         title: "Which of the following best describes JavaScript?",
-//         choices: ["A low-level programming language.", "A scripting language precompiled in the browser.", "A compiled scripting language.", "An object-oriented scripting language."],
-//         answer: "An object-oriented scripting language."
-//     }
-// ];
+var question = document.getElementById('question');
+var choices = Array.from(document.getElementsByClassName('choice-text'));
+var questionCounterText = document.getElementById("questionCounter");
+var timerText = document.getElementById("timer");
 
+var currentQuestion = {};
+var acceptingAnswers = false;
+var score = 75;
+var questionCounter = 0;
+var availableQuesions = [];
+
+//Quiz Questions
 
 var questions = [
     {
-        question: "When a user views a page containing a JavaScript program, which machine actually executes the script?",
-        answers: {
-            a: "The User's machine running a Web browser", 
-            b: "The Web server", 
-            c: "A central machine deep within Netscape's corporate offices", 
-            d: "None of the above"
-        },
-        correctAnswer: "a"
+        question: 'When a user views a page containing a JavaScript program, which machine actually executes the script?',
+        choice1: "The User's machine running a Web browser",
+        choice2: "The Web server",
+        choice3: "A central machine deep within Netscape's corporate offices",
+        choice4: "None of the above",
+        answer: 1,
+    },
+    {
+        question: "What is the correct syntax for referring to an external script called 'xxx.js'?",
+        choice1: "<script href='xxx.js'>",
+        choice2: "<script name='xxx.js'>",
+        choice3: "<script src='xxx.js'>",
+        choice4: "<script file='xxx.js'>",
+        answer: 3,
+    },
+    {
+        question: "How do you write 'Hello World' in an alert box?",
+        choice1: "msgBox('Hello World');",
+        choice2: "alertBox('Hello World');",
+        choice3: "msg('Hello World');",
+        choice4: "alert('Hello World');",
+        answer: 4,
     },
     {
         question: "What are variables used for in JavaScript Programs?",
-        answers: {
-            a: "Storing numbers, dates, or other values", 
-            b: "Varying randomly", 
-            c: "Causing high-school algebra flashbacks", 
-            d: "None of the above"
-        },
-        correctAnswer: "a"
+        choice1: "Storing numbers, dates, or other values",
+        choice2: "Varying randomly",
+        choice3: "Causing high-school algebra flashbacks",
+        choice4: "None of the above",
+        answer: 1,
     },
     {
         question: "Which of the following are capabilities of functions in JavaScript?",
-        answers: {
-            a: "Return a value", 
-            b: "Accept parameters and Return a value", 
-            c: "Accept parameters", 
-            d: "None of the above"
-        },
-        correctAnswer: "c"
-    },
-    {
-        question: "Which of the following is not a valid JavaScript variable name?",
-        answers: {
-            a: "2names", 
-            b: "_first_and_last_names", 
-            c: "FirstAndLast", 
-            d: "None of the above"
-        },
-        correctAnswer: "a"
+        choice1: "Return a value",
+        choice2: "Accept parameters",
+        choice3: "Accept parameters and Return a value",
+        choice4: "None of the above",
+        answer: 2,
     },
     {
         question: "How does JavaScript store dates in a date object?",
-        answers: {
-            a: "The number of milliseconds since January 1st, 1970", 
-            b: "The number of days since January 1st, 1900", 
-            c: "The number of seconds since Netscape's public stock offering.", 
-            d: "None of the above"
-        },
-        correctAnswer: "a"
-    },
-    {
-        question: "Inside which HTML element do we put the JavaScript?",
-        answers: {
-            a: "<js>", 
-            b: "<scripting>", 
-            c: "<script>", 
-            d: "<javascript>"
-        },
-        correctAnswer: "c"
+        choice1: "The number of milliseconds since January 1st, 1970",
+        choice2: "The number of days since January 1st, 1900",
+        choice3: "The number of seconds since Netscape's public stock offering.",
+        choice4: "None of the above",
+        answer: 1,
     },
     {
         question: "Which of the following best describes JavaScript?",
-        answers: {
-            a: "A low-level programming language.", 
-            b: "A scripting language precompiled in the browser.", 
-            c: "A compiled scripting language.", 
-            d: "An object-oriented scripting language."
-        },
-        correctAnswer: "d"
-    }
+        choice1: "A low-level programming language.",
+        choice2: "A scripting language precompiled in the browser.",
+        choice3: "A compiled scripting language.",
+        choice4: "An object-oriented scripting language.",
+        answer: 4,
+    },
 ];
+
+//CONSTANTS
+var WRONG_DEDUCTION = -10;
+var MAX_QUESTIONS = 7;
+
+//Start the quiz. Two functions will run - generate new question, and countdown timer
+function startGame () {
+    questionCounter = 0;
+    score = 75;
+    availableQuesions = [...questions];
+    getNewQuestion();
+    countDown();
+};
+
+//Generate a new question
+function getNewQuestion () {
+    if (availableQuesions.length === 0 || questionCounter >= MAX_QUESTIONS) {
+        localStorage.setItem("mostRecentScore", score);
+        //go to the end page when all questions have been answered
+        return window.location.assign('../pages/score.html');
+    }
+    questionCounter++;
+    questionCounterText.innerText = questionCounter + "/" + MAX_QUESTIONS;
+    
+    //Generate question from the question bank randomly
+    var questionIndex = Math.floor(Math.random() * availableQuesions.length);
+    currentQuestion = availableQuesions[questionIndex];
+    question.innerText = currentQuestion.question;
+
+    choices.forEach((choice) => {
+        var number = choice.dataset['number'];
+        choice.innerText = currentQuestion['choice' + number];
+    });
+
+    availableQuesions.splice(questionIndex, 1);
+    acceptingAnswers = true;
+};
+
+  //Checks whether user answers a given question correctly
+  choices.forEach(choice => {
+    choice.addEventListener("click", function(e) {
+      if (!acceptingAnswers) return;
+  
+      acceptingAnswers = false;
+      var selectedChoice = e.target;
+      var selectedAnswer = selectedChoice.dataset["number"];
+  
+      var classToApply =
+        selectedAnswer == currentQuestion.answer ? "correct" : "incorrect";
+
+        if (classToApply === "incorrect") {
+            decrementScore(WRONG_DEDUCTION);
+          }
+  
+      selectedChoice.parentElement.classList.add(classToApply);
+  
+      setTimeout(() => {
+        selectedChoice.parentElement.classList.remove(classToApply);
+        getNewQuestion();
+      }, 1000);
+    });
+  });
+
+  //Decrease score when wrong answer is selected
+  function decrementScore(num) {
+    score += num;
+
+    if (score < 0) {
+        timerText.innerText = 0
+    } else {
+        timerText.innerText = score;
+    }
+  };
+
+
+//Countdown Timer
+function countDown() {
+
+    setInterval(function() {
+        timerText.textContent = score;
+        score--;
+        
+        if (score === 0) {
+            return window.location.assign('../pages/score.html');
+        }
+    }, 1000);
+}
+  
+  startGame();
+  
