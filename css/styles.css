@@ -21,7 +21,6 @@ h4 {
 h1 {
   font-size: 5.4rem;
   color: #56a5eb;
-  margin-bottom: 5rem;
 }
 
 h1 > span {
@@ -38,6 +37,14 @@ h2 {
 h3 {
   font-size: 2.8rem;
   font-weight: 500;
+  text-align: center;
+}
+
+h4 {
+  font-size: 1.6rem;
+  font-weight: 500;
+  text-align: center;
+  margin-bottom: 1rem;
 }
 
 /* UTILITIES */
@@ -86,7 +93,7 @@ h3 {
     width: 20rem;
     text-align: center;
     border: 0.1rem solid #56a5eb;
-    margin-bottom: 1rem;
+    margin-top: 1rem;
     text-decoration: none;
     color: #56a5eb;
     background-color: white;
