@@ -5,9 +5,16 @@ The application is a timed coding quiz with multiple-choice questions which aspi
 ## Mockup
 
 <p align="center">
-  <img alt="Password Generator" src="https://github.com/caymanh/coding-quiz/blob/main/images/app-screenshot.JPG">
+  <img alt="Coding Quiz Home Page" src="https://github.com/caymanh/coding-quiz/blob/main/images/app-screenshot.JPG">
 </p>
 
+<p align="center">
+  <img alt="Coding Quiz Question Page" src="https://github.com/caymanh/coding-quiz/blob/main/images/app-screenshot02.JPG">
+</p>
+
+<p align="center">
+  <img alt="Coding Quiz High Score Page" src="https://github.com/caymanh/coding-quiz/blob/main/images/app-screenshot03.JPG">
+</p>
 
 ## URL
 
