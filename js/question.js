@@ -71,7 +71,6 @@ var questions = [
 ];
 
 //CONSTANTS
-var WRONG_DEDUCTION = -10;
 var MAX_QUESTIONS = 7;
 
 //Start the quiz. Two functions will run - generate new question, and countdown timer
@@ -119,9 +118,10 @@ function getNewQuestion () {
       var classToApply =
         selectedAnswer == currentQuestion.answer ? "correct" : "incorrect";
 
-        if (classToApply === "incorrect") {
-            decrementScore(WRONG_DEDUCTION);
-          }
+        if (classToApply === "incorrect" && score > 0) {
+            score -= 10;
+            timerText.textContent = score;
+          } 
   
       selectedChoice.parentElement.classList.add(classToApply);
   
@@ -132,30 +132,26 @@ function getNewQuestion () {
     });
   });
 
-  //Decrease score when wrong answer is selected
-  function decrementScore(num) {
-    score += num;
 
-    if (score < 0) {
-        timerText.innerText = 0
-    } else {
-        timerText.innerText = score;
-    }
-  };
 
 
 //Countdown Timer
 function countDown() {
 
     setInterval(function() {
-        timerText.textContent = score;
-        score--;
-        
-        if (score === 0) {
+        if (score > 0) { 
+            score--;
+            timerText.textContent = score;
+        }
+
+        if (score <= 0) {
+            clearInterval();
             return window.location.assign('../pages/score.html');
         }
     }, 1000);
 }
+
+
   
   startGame();
   
